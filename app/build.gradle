@@ -5,7 +5,7 @@ android {
         release {
             keyAlias 'key0'
             keyPassword 'tw123456'
-            storeFile file('/Users/xuyazhong/xyz/stu/run/keys/key')
+            storeFile file('/Users/xuyazhong/xyz/stu/TrackPedometer1/keystore/key')
             storePassword 'tw123456'
         }
     }
