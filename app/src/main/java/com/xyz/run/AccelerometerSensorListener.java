@@ -1,4 +1,4 @@
-package com.zhenqianfan13354468.trackpedometer;
+package com.xyz.run;
 
 import android.content.Context;
 import android.hardware.Sensor;

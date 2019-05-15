@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.zhenqianfan13354468.trackpedometer"
+    package="com.xyz.run"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,7 +10,7 @@
         android:targetSdkVersion="28" />
 
     <application
-        android:name="com.zhenqianfan13354468.trackpedometer.GlobalApplication"
+        android:name="com.xyz.run.GlobalApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -23,7 +23,7 @@
             android:process=":remote"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.xyz.run.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".AccelerometerSensorService" >
+        <service android:name="com.xyz.run.AccelerometerSensorService" >
         </service>
         <service
             android:name="com.baidu.location.f"

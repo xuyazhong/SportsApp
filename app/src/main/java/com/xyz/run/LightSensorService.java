@@ -1,4 +1,4 @@
-package com.zhenqianfan13354468.trackpedometer;
+package com.xyz.run;
 
 import java.util.HashMap;
 
@@ -12,7 +12,7 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.zhenqianfan13354468.trackpedometer.ChartView.Mstyle;
+import com.xyz.run.ChartView.Mstyle;
 
 /**
  * 亮度传感器的service

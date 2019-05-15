@@ -1,4 +1,4 @@
-package com.zhenqianfan13354468.trackpedometer;
+package com.xyz.run;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,10 +16,8 @@ import java.util.logging.Logger;
 
 import org.apache.log4j.Level;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.Location;
@@ -31,8 +29,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -76,7 +72,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.CoordinateConverter.CoordType;
 import com.baidu.mapapi.utils.DistanceUtil;
-import com.zhenqianfan13354468.trackpedometer.MyOrientationListener.OnOrientationListener;
+import com.xyz.run.MyOrientationListener.OnOrientationListener;
 
 import de.mindpipe.android.logging.log4j.LogConfigurator;
 
@@ -811,6 +807,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	 * 画Marker图标
 	 */
 	public void drawMaker(LatLng latlng, int id_source) {
+		Log.e(TAG, "drawMaker: " + latlng + " image => " + id_source );
 		// 构建Marker图标
 		BitmapDescriptor bitmap = BitmapDescriptorFactory
 				.fromResource(id_source);
