@@ -110,8 +110,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
             android:background="@android:color/darker_gray" />
 
         <include layout="@layout/step_msg" />
@@ -119,33 +119,22 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="#d0d0d0" />
+            android:layout_marginTop="30dp"
+            android:background="#ffffff" />
 
         <include layout="@layout/step_settting" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="#d0d0d0" />
-
-        <include layout="@layout/step_mode" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/darker_gray" />
-
-        <include layout="@layout/mobile_msg" />
+            android:layout_marginTop="30dp"
+            android:background="#ffffff" />
     </LinearLayout>
 
 </ScrollView>

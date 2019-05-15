@@ -24,9 +24,6 @@ import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +31,7 @@ import android.widget.Toast;
  *  计步器的Fragment
  */
 public class TabFragmentStep extends Fragment implements OnClickListener,
-		OnChronometerTickListener, OnCheckedChangeListener {
+		OnChronometerTickListener {
 	private static final String TAG = TabFragmentStep.class.getSimpleName();
 
 	//配置存储
@@ -64,13 +61,8 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 	private TextView tvHeight;
 	private TextView tvWeight;
 	private TextView tvAge;
-	private TextView tvSensitive;
-	private TextView tvLightive;
 	private TextView tvSteplen;
 
-	private RadioGroup rgMode;
-	private RadioButton rbStepNormal;
-	private RadioButton rbStepPocket;
 	public static TextView tvLight;
 
 	public static ChartView cvLight;
@@ -78,7 +70,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 	//选择菜单
 	private AlertDialog.Builder dialog;
 	private NumberPicker numberPicker;
-
 	
 	private float calorie;//卡路里
 	private float distance;//路程
@@ -89,15 +80,14 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 	private float weight;//体重
 	private float steplen;//步长
 	private int age;//年龄
+
 	private float sensitive;//灵敏度
 	private float lightive;//感光度
+	public static float LIGHT_BORDER = 20;//感光极限，即感光度
+	public static boolean isInPocketMode = false;//是否是口袋模式
 
 	private int steps;//步数
 	private int seconds;//秒数
-
-	public static float LIGHT_BORDER = 20;//感光极限，即感光度
-	
-	public static boolean isInPocketMode = false;//是否是口袋模式
 
 	public static boolean isOpenMap = false;//地图是否同时开启了
 	
@@ -155,9 +145,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 
 		initView();
 
-		Intent intent = new Intent(getActivity(), LightSensorService.class);
-		getActivity().startService(intent);
-
 		return view;
 	}
 
@@ -184,10 +171,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		weight = mySharedPreferences.getFloat("weight", 65);
 		steplen = mySharedPreferences.getFloat("steplen", 80);
 		age = mySharedPreferences.getInt("age", 24);
-		sensitive = mySharedPreferences.getFloat("sensitive", 8);
-		lightive = mySharedPreferences.getFloat("lightive", 10);
-		LIGHT_BORDER = lightive;
-
 	}
 
 	// 根据配置数据初始化UI显示
@@ -197,16 +180,12 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		tvWeight.setText(weight + "");
 		tvSteplen.setText(steplen + "");
 		tvAge.setText(age + "");
-		tvSensitive.setText(sensitive + "");
-		AccelerometerSensorListener.SENSITIVITY = sensitive;
-		tvLightive.setText(lightive + "");
-		LIGHT_BORDER = lightive;
 	}
 
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
-		// savePersonalData();
+		savePersonalData();
 		super.onStop();
 	}
 
@@ -229,8 +208,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		editor.putFloat("weight", weight);
 		editor.putFloat("steplen", steplen);
 		editor.putInt("age", age);
-		editor.putFloat("sensitive", sensitive);
-		editor.putFloat("lightive", lightive);
 		editor.commit();
 	}
 
@@ -295,21 +272,8 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		tvWeight.setOnClickListener(this);
 		tvAge = (TextView) view.findViewById(R.id.tv_age);
 		tvAge.setOnClickListener(this);
-		tvSensitive = (TextView) view.findViewById(R.id.tv_sensitive);
-		tvSensitive.setOnClickListener(this);
-		tvLightive = (TextView) view.findViewById(R.id.tv_lightive);
-		tvLightive.setOnClickListener(this);
 		tvSteplen = (TextView) view.findViewById(R.id.tv_steplen);
 		tvSteplen.setOnClickListener(this);
-
-		rgMode = (RadioGroup) view.findViewById(R.id.step_mode);
-		rgMode.setOnCheckedChangeListener(this);
-		rbStepNormal = (RadioButton) view.findViewById(R.id.step_normal);
-		rbStepPocket = (RadioButton) view.findViewById(R.id.step_pocket);
-		tvLight = (TextView) view.findViewById(R.id.tv_light);
-
-		cvLight = (ChartView) view.findViewById(R.id.cv_light);
-
 		pbPercent.setMax(10000);
 		cmPasstime.setOnChronometerTickListener(this);
 	}
@@ -542,54 +506,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 					});
 			dialog.show();
 			break;
-		case R.id.tv_sensitive:
-			// 设置灵敏度
-			dialog = new AlertDialog.Builder(getActivity());
-			numberPicker = new NumberPicker(getActivity());
-			numberPicker.setFocusable(true);
-			numberPicker.setFocusableInTouchMode(true);
-			numberPicker.setMaxValue(10);
-			numberPicker.setMinValue(1);
-			numberPicker.setValue((int) Float.parseFloat(tvSensitive.getText()
-					.toString().trim()));
-			dialog.setView(numberPicker);
-			dialog.setPositiveButton("确定",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							tvSensitive.setText(numberPicker.getValue() + "");
-							sensitive = numberPicker.getValue();
-							AccelerometerSensorListener.SENSITIVITY = sensitive;
-							savePersonalData();
-						}
-					});
-			dialog.show();
-			break;
-		case R.id.tv_lightive:
-			// 设置光敏度
-			final EditText editText1 = new EditText(getActivity());
-			editText1.setText(tvLightive.getText());
-			// 设置类型
-			new AlertDialog.Builder(getActivity())
-					.setTitle("请输入")
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setView(editText1)
-					.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									tvLightive.setText(editText1.getText()
-											.toString().trim());
-									lightive = Float.parseFloat(editText1
-											.getText().toString().trim());
-									LIGHT_BORDER = lightive;
-									savePersonalData();
-
-								}
-							}).setNegativeButton("取消", null).show();
-			break;
 		case R.id.tv_steps:
 			// 分享
 			if (steps >= 0) {
@@ -623,13 +539,6 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		tvDistance.setText("0.0");
 		tvSpeed.setText("0.0");
 
-		adjustLightive();
-		// sensitive = 8;
-		// AccelerometerSensorListener.SENSITIVITY = sensitive;
-		// lightive = 10;
-		// LIGHT_BORDER = lightive;
-		// savePersonalData();
-
 	}
 
 	/**
@@ -653,42 +562,4 @@ public class TabFragmentStep extends Fragment implements OnClickListener,
 		return hh + ":" + mm + ":" + ss;
 	}
 
-	/**
-	 * 调整光敏度
-	 */
-	public void adjustLightive() {
-		if (tvLightive == null) {
-			return;
-		}
-		if (LightSensorService.LIGHT == 0) {
-			return;
-		}
-		lightive = LightSensorService.LIGHT;
-		LIGHT_BORDER = lightive;
-		tvLightive.setText(lightive + "");
-		savePersonalData();
-	}
-
-	/*
-	 * 计步模式改变时触发
-	 */
-	@Override
-	public void onCheckedChanged(RadioGroup group, int checkID) {
-		// Intent intent = new Intent(getActivity(), LightSensorService.class);
-		if (checkID == rbStepPocket.getId()) {// 口袋模式
-			// getActivity().startService(intent);
-			isInPocketMode = true;
-
-			// 自动调整光敏度
-			adjustLightive();
-
-			Toast.makeText(getActivity(),
-					"口袋模式已开启，光敏度已自动修正，若有需要请参照下面的感光变化修正光敏度以获得更好的效果",
-					Toast.LENGTH_LONG).show();
-		} else if (checkID == rbStepNormal.getId()) {// 普通模式
-			// getActivity().stopService(intent);
-			isInPocketMode = false;
-		}
-
-	}
 }
