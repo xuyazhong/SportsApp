@@ -35,6 +35,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private TextView mStepTextView;
 
+	private TextView mMineTextView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,14 +53,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		mMapTextView = (TextView) findViewById(R.id.id_tv_map);
 		mStepTextView = (TextView) findViewById(R.id.id_tv_step);
+		mMineTextView = (TextView) findViewById(R.id.id_mine);
 
 		mMapTextView.setOnClickListener(this);
 		mStepTextView.setOnClickListener(this);
+		mMineTextView.setOnClickListener(this);
 
 		mFragmentDatas = new ArrayList<Fragment>();
 
 		mFragmentDatas.add(new TabFragmentMap());
 		mFragmentDatas.add(new TabFragmentStep());
+		mFragmentDatas.add(new TabMine());
 
 		mFragmentAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 			@Override
@@ -89,7 +94,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				case 1:
 					mStepTextView.setTextColor(Color.parseColor("#008000"));
 					break;
-
+                case 2:
+                    mMineTextView.setTextColor(Color.parseColor("#008000"));
+                    break;
 				}
 
 				mCurrentPageIndex = position;
@@ -117,7 +124,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void resetTextView() {
 		mMapTextView.setTextColor(Color.BLACK);
 		mStepTextView.setTextColor(Color.BLACK);
-
+		mMineTextView.setTextColor(Color.BLACK);
 	}
 
 	@Override

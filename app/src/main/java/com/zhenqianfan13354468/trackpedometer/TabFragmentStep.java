@@ -30,7 +30,7 @@ import android.widget.Toast;
 /**
  *  计步器的Fragment
  */
-public class TabFragmentStep extends Fragment implements OnClickListener,
+public class TabFragmentStep extends BaseFragment implements OnClickListener,
 		OnChronometerTickListener {
 	private static final String TAG = TabFragmentStep.class.getSimpleName();
 

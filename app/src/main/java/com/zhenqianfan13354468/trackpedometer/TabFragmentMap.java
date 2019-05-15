@@ -16,8 +16,10 @@ import java.util.logging.Logger;
 
 import org.apache.log4j.Level;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.location.Location;
@@ -29,6 +31,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
@@ -82,7 +85,7 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  *
  */
 
-public class TabFragmentMap extends Fragment implements OnClickListener,
+public class TabFragmentMap extends BaseFragment implements OnClickListener,
 		OnGetGeoCoderResultListener {
 	private static final String TAG = TabFragmentMap.class.getSimpleName();
 
@@ -112,7 +115,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 	private final static int FROM_BD_OTHERS = 3;// 地址从百度通过离线定位或服务端网络定位等获得，偏差较大
 
 	private final static double DISTANCE_MAX_LIMIT = 10000;// 最大容忍定位偏差，
-															// 用于普通定位，防止突然暴走
+	// 用于普通定位，防止突然暴走
 	private final static double DISTANCE_MID_LIMIT = 2000;// 适中容忍定位偏差 ，用于画轨迹上限
 	private final static double DISTANCE_MIN_LIMIT = 200;// 最小容忍定位偏差 ，用于立即画轨迹下限
 	private double dynamidDistanceLimit = 1000;// 动态适中容忍定位偏差
@@ -151,7 +154,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 	private boolean agps = false;
 	private boolean gps = false;
 
-	
+
 	/**
 	 * 处理自带GPS传感器和百度SDK分别得到的位置坐标，进行优化修正
 	 */
@@ -160,35 +163,35 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 		public void handleMessage(android.os.Message msg) {
 			double dis;
 			switch (msg.what) {
-			case FROM_GPS:
-				dis = getDistance(new LatLng(curGPSLocation.getLatitude(),
-						curGPSLocation.getLongitude()), latlng);
-				if (disGPS > DISTANCE_MAX_LIMIT) {
-					return;
-				}
-				disGPS = dis;
-				break;
-			case FROM_BD_GPS:
-				// mBDLocation = curBDLocation;
-				dis = getDistance(new LatLng(curBDLocation.getLatitude(),
-						curBDLocation.getLongitude()), latlng);
-				disBD = dis;
-				break;
-			case FROM_BD_NETWORK:
-				// mBDLocation = curBDLocation;
-				dis = getDistance(new LatLng(curBDLocation.getLatitude(),
-						curBDLocation.getLongitude()), latlng);
-				disBD = dis;
-				break;
-			case FROM_BD_OTHERS:
-				// mBDLocation = curBDLocation;
-				// 等若放弃
-				if (mBDLocation == null) {
-					mBDLocation = curBDLocation;
-				}
-				break;
-			default:
-				break;
+				case FROM_GPS:
+					dis = getDistance(new LatLng(curGPSLocation.getLatitude(),
+							curGPSLocation.getLongitude()), latlng);
+					if (disGPS > DISTANCE_MAX_LIMIT) {
+						return;
+					}
+					disGPS = dis;
+					break;
+				case FROM_BD_GPS:
+					// mBDLocation = curBDLocation;
+					dis = getDistance(new LatLng(curBDLocation.getLatitude(),
+							curBDLocation.getLongitude()), latlng);
+					disBD = dis;
+					break;
+				case FROM_BD_NETWORK:
+					// mBDLocation = curBDLocation;
+					dis = getDistance(new LatLng(curBDLocation.getLatitude(),
+							curBDLocation.getLongitude()), latlng);
+					disBD = dis;
+					break;
+				case FROM_BD_OTHERS:
+					// mBDLocation = curBDLocation;
+					// 等若放弃
+					if (mBDLocation == null) {
+						mBDLocation = curBDLocation;
+					}
+					break;
+				default:
+					break;
 			}
 
 			if (disBD == 0) {
@@ -209,14 +212,11 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 			if (mBDLocation == null) {
 				if (curBDLocation == null) {
 					mBDLocation = curGPSLocation;
-				}
-				else if (curGPSLocation == null) {
+				} else if (curGPSLocation == null) {
 					mBDLocation = curBDLocation;
-				}
-				else if (curBDLocation == null && curBDLocation == null) {
+				} else if (curBDLocation == null && curBDLocation == null) {
 					Toast.makeText(getActivity(), "暂时无法定位，请检查网络设置。", Toast.LENGTH_SHORT);
-				}
-				else if (disBD <= disGPS) {
+				} else if (disBD <= disGPS) {
 					mBDLocation = curBDLocation;
 				} else {
 					mBDLocation = curGPSLocation;
@@ -224,7 +224,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 			}
 
 			accuracy = mBDLocation.getRadius();
-			
+
 			latlng = new LatLng(mBDLocation.getLatitude(),
 					mBDLocation.getLongitude());
 			if (isRecording) {
@@ -247,10 +247,12 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 
 				}
 			}
-		};
+		}
+
+		;
 	};
 
-	
+
 	/**
 	 * 过滤不合理坐标!!!!!!!!!!!，同时采取权重公式来补偿早期的定位误差。
 	 */
@@ -311,7 +313,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.tab_fragment_map, container, false);
 		Log.i(TAG, "onCreatview");
 		logger.info("onCreatview");
@@ -334,7 +336,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 		mBaiduMap.setMyLocationEnabled(true);
 		if (!mLocClient.isStarted()) {
 			mLocClient.start();// //定位SDK
-								// start之后会默认发起一次定位请求，开发者无须判断isstart并主动调用request
+			// start之后会默认发起一次定位请求，开发者无须判断isstart并主动调用request
 		}
 		// 开启方向传感器
 		myOrientationListener.start();
@@ -356,10 +358,11 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 		mMapView.onResume();
 	}
 
-	
+
 	/**
 	 * 初始化GPS
 	 */
+	@SuppressLint("MissingPermission")
 	private void initGPS() {
 
 		// // 从GPS获取最近的定位信息，缓存数据
@@ -395,8 +398,7 @@ public class TabFragmentMap extends Fragment implements OnClickListener,
 					public void onProviderEnabled(String provider) {
 						// TODO Auto-generated method stub
 						// updateMapFromGPS(locationManager.getLastKnownLocation(provider));
-						Location2BDLocation(locationManager
-								.getLastKnownLocation(provider), curGPSLocation);
+						Location2BDLocation(locationManager.getLastKnownLocation(provider), curGPSLocation);
 						
 					}
 

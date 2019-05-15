@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/mine_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="30dp">
+
+        <TextView
+            android:id="@+id/bushu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:text="步数" />
+
+        <TextView
+            android:id="@+id/haoshi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="总耗时" />
+
+        <TextView
+            android:id="@+id/kaluli"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="卡路里" />
+
+        <TextView
+            android:id="@+id/junsu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="平均速度" />
+
+        <TextView
+            android:id="@+id/zonglic"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="总里程" />
+
+        <TextView
+            android:id="@+id/bmi"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="BMI" />
+
+        <TextView
+            android:id="@+id/days"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="每日步数统计" />
+
+        <TextView
+            android:id="@+id/dayHege"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="达标天数" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="退出登录" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
