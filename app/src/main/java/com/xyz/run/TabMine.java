@@ -1,5 +1,6 @@
 package com.xyz.run;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,9 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class TabMine extends BaseFragment {
+public class TabMine extends BaseFragment implements View.OnClickListener {
     private static final String TAG = TabMine.class.getSimpleName();
 
     private View view;
@@ -21,6 +23,7 @@ public class TabMine extends BaseFragment {
     private TextView junsu;
     private TextView kaluli;
     private TextView bmi;
+    private Button logout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +65,14 @@ public class TabMine extends BaseFragment {
         junsu = (TextView) view.findViewById(R.id.junsu);
         kaluli = (TextView) view.findViewById(R.id.kaluli);
         bmi = (TextView) view.findViewById(R.id.bmi);
+        logout = (Button)view.findViewById(R.id.logout);
+        logout.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (v == logout) {
+            startActivity(new Intent(this.getContext(), LoginActivity.class));
+        }
     }
 }

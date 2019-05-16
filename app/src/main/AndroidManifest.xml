@@ -25,9 +25,13 @@
         <activity
             android:name="com.xyz.run.MainActivity"
             android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="登录注册">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
