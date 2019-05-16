@@ -34,7 +34,6 @@ public class TabMine extends BaseFragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        return super.onCreateView(inflater, container, savedInstanceState);
         this.view = inflater.inflate(R.layout.tab_fragment_mine, container, false);
         Log.e(TAG, "onCreateView");
         initViews();
