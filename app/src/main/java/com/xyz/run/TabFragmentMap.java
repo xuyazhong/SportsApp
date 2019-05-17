@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.log4j.Level;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,10 +25,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
@@ -74,7 +76,8 @@ import com.baidu.mapapi.utils.CoordinateConverter.CoordType;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.xyz.run.MyOrientationListener.OnOrientationListener;
 
-import de.mindpipe.android.logging.log4j.LogConfigurator;
+//import de.mindpipe.android.logging.log4j.LogConfigurator;
+//import org.apache.log4j.Level;
 
 /**
  * 地图的Fragment
@@ -277,17 +280,17 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	}
 
 	public void configLog() {
-		final LogConfigurator logConfigurator = new LogConfigurator();
-
-		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
-				+ File.separator + "map.log");
-		// Set the root log level
-		logConfigurator.setRootLevel(Level.DEBUG);
-		// Set log level of a specific logger
-		logConfigurator.setLevel("org.apache", Level.ERROR);
-		logConfigurator.configure();
-
-		logger = Logger.getLogger(TAG);
+//		final LogConfigurator logConfigurator = new LogConfigurator();
+//
+//		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
+//				+ File.separator + "map.log");
+//		// Set the root log level
+//		logConfigurator.setRootLevel(Level.DEBUG);
+//		// Set log level of a specific logger
+//		logConfigurator.setLevel("org.apache", Level.ERROR);
+//		logConfigurator.configure();
+//
+//		logger = Logger.getLogger(TAG);
 	}
 
 	@Override
@@ -295,16 +298,19 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate");
 		configLog();
-		logger.info("onCreate");
-
+//		logger.info("onCreate");
 
 		mConnectivityManager = (ConnectivityManager) getActivity()
 				.getSystemService(FragmentActivity.CONNECTIVITY_SERVICE);
 		locationManager = (LocationManager) getActivity().getSystemService(
 				FragmentActivity.LOCATION_SERVICE);
 
-		initGPS();
-
+		if (Utils.requestLocationPermision(this)) {
+			Log.e(TAG, "有权限 ");
+			initGPS();
+		} else {
+			Log.e(TAG, "没有权限 ");
+		}
 	}
 
 	@Override
@@ -312,7 +318,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 							 Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.tab_fragment_map, container, false);
 		Log.i(TAG, "onCreatview");
-		logger.info("onCreatview");
+//		logger.info("onCreatview");
 
 		initView();
 		initMap();
@@ -360,7 +366,6 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	 */
 	@SuppressLint("MissingPermission")
 	private void initGPS() {
-
 		// // 从GPS获取最近的定位信息，缓存数据
 		provider = LocationManager.GPS_PROVIDER;
 		Location location;
@@ -501,6 +506,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	 * 初始化地图
 	 */
 	private void initMap() {
+
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		ui = mBaiduMap.getUiSettings();

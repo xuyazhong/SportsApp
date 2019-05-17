@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +23,15 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * 主Activity，统领Fragment和menu子菜单
  *
  */
-public class MainActivity extends FragmentActivity implements OnClickListener {
+public class MainActivity extends FragmentActivity implements OnClickListener, EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
 
 	private ViewPager mViewPager;
 	private FragmentPagerAdapter mFragmentAdapter;
@@ -46,6 +54,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 
 		initView();
+		permisionTask();
 	}
 
 	private void initView() {
@@ -210,5 +219,60 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		}
 		return true;
+	}
+
+	private boolean hasPermission() {
+		return EasyPermissions.hasPermissions(this, Constants.PERMISIONLIST);
+	}
+
+	@AfterPermissionGranted(Constants.RC_PERM)
+	public void permisionTask() {
+		if (!hasPermission()) {
+			EasyPermissions.requestPermissions(
+					this,
+					Constants.defaule_always_message,
+					Constants.RC_PERM,
+					Constants.PERMISIONLIST);
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == Constants.PERMISION_REQUEST_CODE) {
+			if (hasPermission()) {
+				Log.e("Main ###", "有权限");
+			} else {
+				Log.e("Main ###", "没有有权限");
+			}
+		}
+	}
+
+	@Override
+	public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+	}
+
+	@Override
+	public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+		if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+			new AppSettingsDialog.Builder(this).setTitle("提示").setRationale(Constants.defaule_always_message).setRequestCode(Constants.PERMISION_REQUEST_CODE).build().show();
+		}
+	}
+
+	@Override
+	public void onRationaleAccepted(int requestCode) {
+
+	}
+
+	@Override
+	public void onRationaleDenied(int requestCode) {
+
 	}
 }

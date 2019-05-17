@@ -15,6 +15,11 @@ android {
             storePassword 'tw123456'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
@@ -22,6 +27,9 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         signingConfig signingConfigs.debug
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
     }
     buildTypes {
         release {
@@ -30,11 +38,7 @@ android {
         }
     }
     compileSdkVersion 28
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
+
     productFlavors {
     }
 }
@@ -48,4 +52,5 @@ dependencies {
     implementation files('libs/andbase.jar')
     implementation files('libs/BaiduLBS_Android.jar')
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'pub.devrel:easypermissions:2.0.1'
 }
