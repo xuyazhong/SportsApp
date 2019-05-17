@@ -1,6 +1,9 @@
 package com.xyz.run;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -299,42 +303,17 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 	}
 
 	/**
-	 * 分享功能
+	 * 统计分析
 	 */
-	public void share(String imgPath, String msg) {
-	
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		if (imgPath == null || imgPath.equals("")) {
-			intent.setType("text/plain"); // 纯文本
-		} else {
-			File f = new File(imgPath);
-			if (f != null && f.exists() && f.isFile()) {
-				intent.setType("image/*");
-				Uri u = Uri.fromFile(f);
-				intent.putExtra(Intent.EXTRA_STREAM, u);
-			}
-		}
-		intent.putExtra(Intent.EXTRA_TEXT, msg);
-		startActivity(Intent.createChooser(intent, "分享到"));
-	}
-
-	/**
-	 * 编辑分享内容
-	 */
-	public void shareMsg(final String imgPath) {
-		final EditText editText = new EditText(getActivity());
-		final StringBuffer msg = new StringBuffer();
-		msg.append("你们在哪里呢？我刚刚走了" + steps + "步哦，足足有" + distance + "米呐，又挥发了" + calorie + "千卡卡路里呐！");
-
-		editText.setText(msg.toString());
-		new AlertDialog.Builder(getActivity()).setTitle("分享内容:")
-				.setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+	public void shareMsg() {
+		new AlertDialog.Builder(getActivity())
+				.setTitle("提示")
+				.setMessage("是否查看统计分析?")
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						msg.setLength(0);
-						msg.append(editText.getText().toString().trim());
-						share(imgPath, msg.toString());
+						// ok
+
 					}
 				}).setNegativeButton("取消", null).show();
 	}
@@ -508,7 +487,7 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 		case R.id.tv_steps:
 			// 分享
 			if (steps >= 0) {
-				shareMsg(null);
+				shareMsg();
 			}
 			break;
 		}
@@ -540,9 +519,98 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 
 	}
 
-	/**
-	 * 格式化时间显示
-	 */
+	/*
+	private void reset() {
+		if(records.size() != 0){
+			new AlertDialog.Builder(getActivity())
+					.setTitle("提示")
+					.setMessage("是否查看统计分析？")
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startActivity(new Intent(getActivity(),
+									LineChartActivity.class)
+									.putExtra("data", (Serializable) records));
+							records.clear();
+						}
+					})
+					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							records.clear();
+						}
+					})
+					.show();
+		}
+		Set<String> infos = SPUtils.getStringSet(SPUtils.getString("user") + "dayCount");
+		float calorie1 = SPUtils.getFloat(SPUtils.getString("user") + "calorie", 0);
+		float speed1 = SPUtils.getFloat(SPUtils.getString("user") + "speed", 0);
+		float distance1 = SPUtils.getFloat(SPUtils.getString("user") + "distance", 0);
+		int steps1 = SPUtils.getInt(SPUtils.getString("user") + "steps", 0);
+		int seconds1 = SPUtils.getInt(SPUtils.getString("user") + "seconds", 0);
+		int stepss = SPUtils.getInt(SPUtils.getString("user") + getD(), 0);
+		SPUtils.putInt(SPUtils.getString("user") + getD(), stepss + steps);
+		SPUtils.putFloat(SPUtils.getString("user") + "calorie", calorie + calorie1);
+		SPUtils.putFloat(SPUtils.getString("user") + "speed", speed + speed1);
+		SPUtils.putFloat(SPUtils.getString("user") + "distance", distance + distance1);
+		SPUtils.putInt(SPUtils.getString("user") + "steps", steps + steps1);
+		SPUtils.putInt(SPUtils.getString("user") + "seconds", seconds + seconds1);
+		SPUtils.putInt(SPUtils.getString("user") + getD(), stepss + steps);
+
+		Iterator<String> iterator = infos.iterator();
+		boolean has = false;
+		while (iterator.hasNext()) {
+			String next = iterator.next();
+			if (next.indexOf(getD()) != -1) {
+				DayCountEn en = gson.fromJson(next, DayCountEn.class);
+				if (en != null && en.getDate().equalsIgnoreCase(getD())) {
+					en.setRealCount(stepss + steps);
+					en.setDesCount(Integer.parseInt(tvGoal.getText().toString()));
+					iterator.remove();
+					infos.add(gson.toJson(en));
+					has = true;
+					break;
+				}
+			}
+		}
+		if (!has) {
+			DayCountEn en = new DayCountEn(System.currentTimeMillis(), getD(),
+					Integer.parseInt(tvGoal.getText().toString()), stepss + steps);
+			infos.add(gson.toJson(en));
+		}
+
+		SPUtils.putStringSet(SPUtils.getString("user") + "dayCount", infos);
+		Intent intent = new Intent(getActivity(),
+				AccelerometerSensorService.class);
+		getActivity().stopService(intent);
+		AccelerometerSensorListener.reset();
+		steps = 0;
+		seconds = 0;
+
+		tvPercent.setText("0.0");
+		pbPercent.setProgress(0);
+		String per = SPUtils.getString("per");
+		tvGoal.setText(TextUtils.isEmpty(per) ? "10000" : per);
+		tvSteps.setText("0.0");
+		// tvPasstime.setText("00:00:00");
+		cmPasstime.setBase(SystemClock.elapsedRealtime());
+		cmPasstime.stop();
+		btControl.setText("开始");
+		tvCalorie.setText("0.0");
+		tvDistance.setText("0.0");
+		tvSpeed.setText("0.0");
+
+		float percent = (SPUtils.getInt(SPUtils.getString("user") + getD(), 0) + steps) * 100.0f / pbPercent.getMax();
+		tvPercent.setText(String.valueOf(percent) + "%");
+
+		adjustLightive();
+
+	}
+	*/
+
+		/**
+         * 格式化时间显示
+         */
 	@Override
 	public void onChronometerTick(Chronometer arg0) {
 		// TODO Auto-generated method stub
