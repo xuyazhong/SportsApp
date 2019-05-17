@@ -47,4 +47,5 @@ dependencies {
     implementation files('libs/android-logging-log4j-1.0.3.jar')
     implementation files('libs/andbase.jar')
     implementation files('libs/BaiduLBS_Android.jar')
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
