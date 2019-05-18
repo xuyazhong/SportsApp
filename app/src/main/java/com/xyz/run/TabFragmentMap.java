@@ -558,7 +558,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 		option.setAddrType("all"); // 设置使其可以获取具体的位置，把精度纬度换成具体地址
 		// option.disableCache(true);//禁止启用缓存定位
 		mLocClient.setLocOption(option);
-		// mLocClient.start();
+		mLocClient.start();
 
 		mCurrentX = 0;
 		myOrientationListener = new MyOrientationListener(getActivity());
@@ -1012,6 +1012,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 					.show();
 			return;
 		}
+		Log.e("#######%%%%%", "location => " + result.getLocation().toString());
 		Toast.makeText(getActivity(), result.getAddress(), Toast.LENGTH_LONG)
 				.show();
 
