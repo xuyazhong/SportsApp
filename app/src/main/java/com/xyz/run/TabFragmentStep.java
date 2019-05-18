@@ -101,7 +101,7 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 			steps = AccelerometerSensorListener.CURRENT_SETP;
 			float percent = steps * 100 / pbPercent.getMax();
 			tvPercent.setText(String.valueOf(percent) + "%");
-			pbPercent.setProgress(steps);// 爆表？
+			pbPercent.setProgress(steps);
 			tvSteps.setText("" + steps);
 
 			calAddData();
@@ -134,6 +134,17 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 		calorie = (float) (weight * steps * steplen * 0.01 * 0.01);
 		
 		tvCalorie.setText(calorie + "");
+
+		editor = mySharedPreferences.edit();
+
+//		保存数据
+		editor.putFloat("calorie", calorie);
+		editor.putFloat("speed", speed);
+		editor.putInt("seconds", seconds);
+		editor.putFloat("distance", distance);
+		editor.putInt("steps", steps);
+
+		editor.commit();
 
 	}
 
@@ -217,7 +228,6 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 		super.onCreate(savedInstanceState);
 	}
 
-	
 	/**
 	 * 
 	 */
