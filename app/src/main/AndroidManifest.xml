@@ -48,11 +48,9 @@
         <activity android:name="com.xyz.run.LoginActivity"
             android:label="登录注册"
             android:icon="@drawable/logo" />
-
         <activity android:name="com.xyz.run.LineChartActivity"
             android:label="统计分析"
             android:icon="@drawable/logo" />
-
         <activity
             android:name="com.xyz.run.MainActivity"
             android:label="@string/app_name" >

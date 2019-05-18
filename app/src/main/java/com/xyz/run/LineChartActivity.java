@@ -57,10 +57,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         {   // // Chart Style // //
             chart = findViewById(R.id.chart1);
 
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-            // background color
-            chart.setBackground(drawable);
-
             // disable description text
             chart.getDescription().setEnabled(false);
 
@@ -91,7 +87,8 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         XAxis xAxis;
         {   // // X-Axis Style // //
             xAxis = chart.getXAxis();
-
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setTextColor(Color.WHITE);
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
         }
@@ -107,12 +104,15 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             yAxis.enableGridDashedLine(10f, 10f, 0f);
 
             // axis range
-            yAxis.setAxisMaximum(200f);
+            yAxis.setAxisMaximum(150f);
             yAxis.setAxisMinimum(0f);
+            yAxis.setTextColor(Color.WHITE);
         }
 
+        int array [] = {0, 63, 97, 13, 20, 105, 45, 42, 108, 72, 12, 50, 42, 21, 13, 61};
+
         // add data
-        setData(15, 180);
+        setData(array);
 
         // draw points over time
         chart.animateX(1500);
@@ -124,14 +124,13 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         l.setForm(LegendForm.LINE);
     }
 
-    private void setData(int count, float range) {
+    private void setData(int array[]) {
 
         ArrayList<Entry> values = new ArrayList<>();
 
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range);
-            values.add(new Entry(i, val));
+        for (int i = 0; i < array.length; i++) {
+            int value = array[i];
+            values.add(new Entry(i, (float)value));
         }
 
         LineDataSet set1;
@@ -145,7 +144,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             chart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(values, "DataSet 1");
+            set1 = new LineDataSet(values, "");
 
             set1.setDrawIcons(false);
 
@@ -155,14 +154,13 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
             // line thickness and point size
             set1.setLineWidth(1f);
-            set1.setCircleRadius(3f);
+            set1.setCircleRadius(2f);
 
             // draw points as solid circles
-            set1.setDrawCircleHole(false);
+            set1.setDrawCircleHole(true);
 
             // customize legend entry
             set1.setFormLineWidth(1f);
-//            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
             set1.setFormSize(15.f);
 
             // text size of values
@@ -181,7 +179,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             });
 
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-            set1.setDrawCircles(false);
+            set1.setDrawCircles(true);
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1); // add the data sets
@@ -189,17 +187,10 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             // create a data object with the data sets
             LineData data = new LineData(dataSets);
 
-            // set data
             chart.setData(data);
         }
     }
 
-    /*
-    @Override
-    protected void saveToGallery() {
-        saveToGallery(chart, "LineChartActivity1");
-    }
-    */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.e("Entry selected", e.toString());
