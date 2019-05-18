@@ -296,7 +296,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "onCreate");
+		Log.e(TAG, "onCreate");
 		configLog();
 //		logger.info("onCreate");
 
@@ -306,7 +306,6 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 				FragmentActivity.LOCATION_SERVICE);
 
 		if (Utils.requestLocationPermision(this)) {
-			Log.e(TAG, "有权限 ");
 			initGPS();
 		} else {
 			Log.e(TAG, "没有权限 ");
@@ -317,7 +316,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.tab_fragment_map, container, false);
-		Log.i(TAG, "onCreatview");
+		Log.e(TAG, "onCreatview");
 //		logger.info("onCreatview");
 
 		initView();
@@ -511,11 +510,6 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 		mBaiduMap = mMapView.getMap();
 		ui = mBaiduMap.getUiSettings();
 
-		// BaiduMapOptions options = new BaiduMapOptions();
-		// options.compassEnabled(false); // 不允许指南针
-		// options.zoomControlsEnabled(false); // 不显示缩放按钮
-		// options.scaleControlEnabled(false); // 不显示比例尺
-
 		mMapView.removeViewAt(1); // 去掉百度logo
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(17.0f);// 17 100m
 		mBaiduMap.setMapStatus(msu);
@@ -568,8 +562,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 
 		mCurrentX = 0;
 		myOrientationListener = new MyOrientationListener(getActivity());
-		myOrientationListener
-				.setOnOrientationListener(new OnOrientationListener() {
+		myOrientationListener.setOnOrientationListener(new OnOrientationListener() {
 
 					@Override
 					public void onOrientationChanged(float x) {
@@ -683,14 +676,6 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 		mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
 				mCurrentMode, true, null));
 	}
-	
-	// /**
-	// * 用经验参数修正百度坐标
-	// */
-	// public void correct(BDLocation bdloc){
-	// bdloc.setLatitude(bdloc.getLatitude()-0.01185);
-	// bdloc.setLongitude(bdloc.getLongitude()-0.00328);
-	// }
 
 	/**
 	 * 定位SDK监听函数
@@ -702,8 +687,8 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 			if (location == null || mMapView == null)
 				return;
 			if (location.getLatitude() == 0.0 && location.getLongitude() == 0.0) {
-				// mLocClient.requestLocation();//请求定位
-				// mLocClient.requestOfflineLocation();//请求一次离线地址
+				 mLocClient.requestLocation();//请求定位
+				 mLocClient.requestOfflineLocation();//请求一次离线地址
 				return;
 			}
 			
@@ -813,7 +798,6 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 	 * 画Marker图标
 	 */
 	public void drawMaker(LatLng latlng, int id_source) {
-		Log.e(TAG, "drawMaker: " + latlng + " image => " + id_source );
 		// 构建Marker图标
 		BitmapDescriptor bitmap = BitmapDescriptorFactory
 				.fromResource(id_source);
@@ -1022,6 +1006,7 @@ public class TabFragmentMap extends BaseFragment implements OnClickListener,
 
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+		Log.e("#######", result.getLocation().toString());
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
 			Toast.makeText(getActivity(), "抱歉，当前地理位置无法识别", Toast.LENGTH_SHORT)
 					.show();

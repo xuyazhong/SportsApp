@@ -28,14 +28,11 @@ public class TabMine extends BaseFragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate");
-
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.tab_fragment_mine, container, false);
-        Log.e(TAG, "onCreateView");
         initViews();
         return view;
     }
@@ -43,7 +40,6 @@ public class TabMine extends BaseFragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart");
         dayHege.setText("达标天数：" + 22);
         bushu.setText("总步数: " + 999);
         haoshi.setText("总耗时（秒）：" + 100);
@@ -55,7 +51,6 @@ public class TabMine extends BaseFragment implements View.OnClickListener {
     }
 
     private void initViews() {
-
 
         dayHege = (TextView) view.findViewById(R.id.dayHege);
         bushu = (TextView) view.findViewById(R.id.bushu);

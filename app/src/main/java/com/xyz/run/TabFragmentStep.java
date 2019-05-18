@@ -142,8 +142,6 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		this.view = inflater.inflate(R.layout.tab_fragment_step, container,
 				false);
-		Log.i(TAG, "onCreateView");
-
 		mSubThread();
 
 		initView();
@@ -155,7 +153,6 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Log.i(TAG, "onStart");
 
 		restorePersonalData();
 		initPersonalData();
