@@ -53,4 +53,5 @@ dependencies {
     implementation files('libs/BaiduLBS_Android.jar')
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'pub.devrel:easypermissions:2.0.1'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

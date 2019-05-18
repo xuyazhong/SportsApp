@@ -312,7 +312,8 @@ public class TabFragmentStep extends BaseFragment implements OnClickListener,
 				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// ok
+						Intent intent = new Intent(getActivity(), LineChartActivity.class);
+						startActivity(intent);
 
 					}
 				}).setNegativeButton("取消", null).show();

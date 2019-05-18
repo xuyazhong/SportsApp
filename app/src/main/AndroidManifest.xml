@@ -45,7 +45,13 @@
             android:enabled="true"
             android:process=":remote"/>
 
-        <activity android:name=".LoginActivity" />
+        <activity android:name="com.xyz.run.LoginActivity"
+            android:label="登录注册"
+            android:icon="@drawable/logo" />
+
+        <activity android:name="com.xyz.run.LineChartActivity"
+            android:label="统计分析"
+            android:icon="@drawable/logo" />
 
         <activity
             android:name="com.xyz.run.MainActivity"
@@ -57,11 +63,6 @@
         </activity>
 
         <service android:name="com.xyz.run.AccelerometerSensorService" >
-        </service>
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
         </service>
     </application>
 
